@@ -193,11 +193,17 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 5. **speak-human-tw**（繁體中文文字「去 AI 味」校對，會寫對外文章的人建議裝）：
    在 GitHub 搜尋 `speak-human-tw`（作者：雷蒙），裝該技能資料夾。
 
-### 3e. 檢查入門包自帶技能
+### 3e. 安裝入門包自帶技能
 
-看 https://github.com/Dhahran123/claude-code-starter-tw 的 `skills/` 資料夾
-（clone 或走 GitHub API 皆可）：若裡面有技能資料夾（含 SKILL.md），一併安裝——
-那是整理者之後補上的自製技能，會附各自的說明。目前若只有一個 README 就跳過。
+clone https://github.com/Dhahran123/claude-code-starter-tw ，
+把 `skills/` 底下的每個技能資料夾（含 SKILL.md 的那層）複製到 `~/.claude/skills/`。
+
+目前包含 **`dental-lit`**（牙科文獻檢索與驗貨管線）：
+把臨床問題變成 PICO、雙軌搜 PubMed、逐筆驗證撤稿與定位、輸出證據表——
+每筆引用都當場實際查證過才交付，**不憑記憶給文獻**。
+它跟 3b 那 5 支是搭配關係：dental-lit 負責「找到並驗證文獻」，那 5 支負責「深入評讀」。
+向使用者說明：之後說「找◯◯的文獻」（快查）或「深挖◯◯」（完整跑）就會觸發。
+若日後 `skills/` 有新增其他技能，同樣一併安裝。
 
 ---
 
