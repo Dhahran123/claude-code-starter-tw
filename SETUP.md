@@ -256,6 +256,13 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
    https://github.com/mattpocock/skills （在 `skills/productivity/` 底下）——只裝這兩支；
    結構化思考 8 支：https://github.com/tjboudreaux/cc-thinking-skills ——
    只裝 `skills/` 底下的技能資料夾，**不要**搬 evals／experiments／scripts。
+5. **交接與方法論三支**（`handoff` 把做到一半的工作交接給下一個對話／`teach` 用蘇格拉底式
+   教你懂一個概念／`writing-great-skills` 自己寫技能的方法論）：
+   https://github.com/mattpocock/skills ——同上 repo，各技能資料夾照通用裝法。
+6. **web-archiving**（把網頁當下的樣子存進永久檔案庫，留證據用）：
+   https://github.com/jamditis/claude-skills-journalism ——**只裝** research-toolkit 裡的
+   `web-archiving` 那一支資料夾，不要 clone 整包啟用其他部分。
+   ⚠️ 含個資或內部資訊的網址**絕不**送公開存檔——存了就永久撤不掉。
 
 另外：入門包 repo 的 `skills/` 若日後有其他新技能，介紹用途後詢問安裝。
 
