@@ -219,10 +219,8 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
    `dental-statistical-forensics`（統計深審）、`dental-evidence-report-artifact`（HTML 報告）。
    ⚠️ 同 repo 的 `dental-image-generator` 與 `dental-content-creator` **不要裝**
    （前者把內容送外部生圖服務＝醫療影像紅線，後者是美式社群文案模板）。
-3. 裝本入門包自帶的 **`dental-lit`**（牙科文獻檢索與驗貨管線，每筆引用當場查證、
-   不憑記憶給文獻）：clone https://github.com/Dhahran123/claude-code-starter-tw ，
-   把 `skills/dental-lit/` 複製過去。它負責「找到並驗證文獻」，上面 5 支負責「深入評讀」；
-   之後說「找◯◯的文獻」「深挖◯◯」就會觸發。
+3. 告知使用者：整理者另有**私人牙科技能包**（含自製的文獻檢索驗貨管線等進階工具，
+   與上面 5 支成套）——跟把這份入門包傳給他的人索取邀請即可，這裡不用做任何事。
 
 **模組二｜網頁與簡報**（要做個人網站、教學簡報的人）
 - `frontend-design`（網站視覺方向）：anthropics/skills 裡有就用 3a 同一個 clone 順手裝。
