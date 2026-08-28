@@ -11,10 +11,15 @@
 完全沒接觸過 AI 工具與程式，母語是繁體中文，用的是 Mac。
 你的任務：照本文件的階段順序，帶他完成 Claude Code 的個人化設定。
 
-**環境判斷（開工前先做）**：使用者可能用**桌面版 app**（預設路線）或**終端機版 CLI**，
-兩者共用設定（`~/.claude/`、`~/.claude.json`）。先跑 `command -v claude` 判斷：
-- 有 `claude` 指令 → 各階段照指令版做法走。
-- 沒有（桌面版通常不附 CLI）→ **這不是錯誤**，照各階段標「桌面版做法」的替代路線走。
+**環境判斷（開工前先做，兩個檢查）**：
+
+1. **確認是本機 session**：跑 `uname`——回 `Darwin`＝在使用者的 Mac 上，繼續；
+   回 `Linux`＝這是雲端 session，**停下**：請使用者關掉這個對話，
+   重開一個 **Local（本機）** session 再重貼咒語（設定裝在雲端環境就白做了）。
+2. **判斷有沒有 CLI**：使用者可能用**桌面版 app**（預設路線）或**終端機版 CLI**，
+   兩者共用設定（`~/.claude/`、`~/.claude.json`）。跑 `command -v claude`：
+   - 有 `claude` 指令 → 各階段照指令版做法走。
+   - 沒有（桌面版通常不附 CLI）→ **這不是錯誤**，照各階段標「桌面版做法」的替代路線走。
 
 ### 執行守則（全程遵守）
 
@@ -22,8 +27,10 @@
 2. **一次只做一個階段**。每個階段開始前，先用兩三句話說明「要做什麼、為什麼需要」；
    做完回報結果，再問要不要繼續下一階段。
 3. 跑任何指令前，先用一句白話說明這個指令會做什麼。
-4. 指令失敗最多重試兩次；還是不行就停下來白話說明卡在哪，
-   把該項標成「跳過」繼續往下，最後彙整所有跳過的項目。
+4. 指令失敗最多重試兩次，之後分兩種處理：
+   - **硬前置**（本機 session、Node.js／npx、git、寫入 `~/.claude.json`、階段 2 的四個 MCP）：
+     **不可跳過**——停下來白話說明卡在哪、給解法，解決了才往下（後面的階段全靠它們）。
+   - **其他**（個別技能、選配階段）：標成「跳過」繼續往下，最後彙整跳過清單。
 5. 本文件寫的套件名稱與 GitHub 路徑**可能隨時間變動**——找不到時，
    用合理方式尋找（搜尋 repo、看它的 README）；還是找不到就跳過並回報，不要硬猜亂裝。
 6. **不要安裝本文件沒列出的東西**，也不要略過文件中標 ⚠️ 的警告。
@@ -34,15 +41,19 @@
 
 目的：確認兩個基礎工具在不在（很多 Mac 本來就有）。
 
-1. 跑 `node --version`。
-   - 沒有的話：待會要接的外部工具需要它（Node.js 是那些工具的運行引擎）。
+1. 跑 `node --version` 與 `npx --version`。
+   - 沒有 Node.js 的話：待會要接的外部工具需要它（Node.js 是那些工具的運行引擎）。
      帶使用者到 https://nodejs.org 下載 **LTS 版**的 macOS 安裝檔（.pkg），
      像裝一般軟體一樣裝完 → 完全重啟 Claude Code（桌面版 `Cmd + Q` 再重開；
      終端機版重開終端機）→ 回來繼續。（不要教他用 Homebrew，對新手太複雜。）
+     **重啟前先講好**：「重開後從左側清單點回**這個對話**，跟我說『繼續設定』就好。」
+   - 版本低於 20 也照上面重裝成 LTS。
 2. 跑 `git --version`。
-   - 第一次跑 macOS 可能跳出「安裝命令列開發者工具」視窗——請使用者按「安裝」等它完成。
-3. 問使用者要一個 **email**：後面接學術資料庫（PubMed／OpenAlex）時當禮貌性識別用，
-   跟他說明「這只是告訴資料庫你是誰、方便它們管理流量，不會註冊任何帳號」。
+   - 第一次跑 macOS 可能跳出「安裝命令列開發者工具」視窗——請使用者按「安裝」等它完成，
+     **裝完再跑一次 `git --version`，拿到版本號才算通過**。
+3. 問使用者要一個 **email**：給文獻工具當禮貌性識別用（找全文的 Unpaywall 服務
+   與 OpenAlex 資料庫），跟他說明「這只是告訴資料庫你是誰、方便它們管理流量，
+   不會註冊任何帳號」。
 
 ---
 
@@ -70,9 +81,11 @@
 
 # 硬規則（沒有例外）
 
-- **病患個資只留本機**：病患姓名、病歷、口內照、X 光、約診資料——
-  絕不上傳到任何外部服務（生圖網站、公開發布、雲端表單、第三方 AI）。
-  要傳出去之前必須先去識別化（拿掉姓名與可辨識資訊），並先讓我確認。
+- **病患可識別資料不進 AI**：病患姓名、病歷、口內照、X 光、約診資料——
+  不讓 Claude 讀取（我給 AI 看的內容都會傳到雲端處理），
+  也絕不上傳到任何其他外部服務（生圖網站、公開發布、雲端表單）。
+  需要 AI 協助臨床相關內容時，先去識別化（姓名改代號、拿掉可辨識資訊）再給。
+  發現我給的內容裡有病患可識別資料時，主動提醒我。
 - 醫療專業判斷永遠是我來做，AI 只做資料整理、文獻彙整與草稿。
 
 # 協作方式
@@ -102,16 +115,17 @@
 claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest
 ```
 
-備註：它預設使用電腦裡的 Google Chrome。若使用者沒裝 Chrome、之後第一次用時失敗，
-跑 `npx playwright install chromium` 再試。
+備註：它預設使用電腦裡的 Google Chrome。先問使用者有沒有裝 Chrome；
+沒有就帶他去 https://www.google.com/chrome 下載安裝（比改瀏覽器設定簡單得多）。
 
 **2. Firecrawl**（讓 Claude 把網頁文章讀成乾淨文字，適合讀新聞、部落格、官網）
 
 ```
-claude mcp add --scope user --transport http firecrawl https://mcp.firecrawl.dev/mcp
+claude mcp add --scope user --transport http firecrawl https://mcp.firecrawl.dev/v2/mcp
 ```
 
 備註：免註冊有基本額度；之後用量大再到 firecrawl.dev 註冊拿 API key 升級，現在不用。
+若 `/v2/mcp` 連不上，改試舊端點 `https://mcp.firecrawl.dev/mcp`。
 
 **3. PubMed**（醫學文獻資料庫：搜尋、抓摘要、找相關文獻、串全文）
 （`使用者email` 換成階段 0 拿到的 email）
@@ -146,7 +160,7 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
     },
     "firecrawl": {
       "type": "http",
-      "url": "https://mcp.firecrawl.dev/mcp"
+      "url": "https://mcp.firecrawl.dev/v2/mcp"
     },
     "pubmed": {
       "command": "npx",
@@ -182,8 +196,8 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 
 ### 3a. 文書四件套（Word／PowerPoint／Excel／PDF）
 
-先檢查是否已內建：看你自己的技能清單有沒有 `docx`、`pptx`、`xlsx`、`pdf`
-（新版 Claude Code 通常已內建）。**有就跳過這步。**
+先**實際檢查**（不要憑印象認定「新版應該內建」）：看你當下的技能清單，
+`docx`、`pptx`、`xlsx`、`pdf` 四支是不是都在。**四支都在才跳過；缺哪支就補哪支。**
 
 沒有才裝：clone https://github.com/anthropics/skills ，
 找到 docx、pptx、xlsx、pdf 四個技能資料夾，複製到 `~/.claude/skills/`。
@@ -228,15 +242,17 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
    另需安裝 ffmpeg 本體（屆時再協助，`brew install ffmpeg` 或官網下載）。
 3. **scheduler**（定時自動任務，例如每天早上自動整理東西）：
    https://github.com/jshchnz/claude-code-scheduler ——只裝 `skills/scheduler/` 資料夾。
+   ⚠️ 定時執行需要**終端機版 CLI**（README 文末的進階段落）——只用桌面版的人
+   先別裝，等真的需要再回來。
    ⚠️ 排程任務**絕不**在碰得到病患資料的資料夾用「跳過權限確認」的設定。
 4. **思考決策包**：
    - `grilling`＋`grill-me`（讓 Claude 當魔鬼代言人，壓力測試你的計畫）：
-     https://github.com/mattpocock/skills ——只裝這兩支。
+     https://github.com/mattpocock/skills （在 `skills/productivity/` 底下）——只裝這兩支。
    - 結構化思考 8 支（pre-mortem 預想失敗、第一性原理、機會成本……）：
      https://github.com/tjboudreaux/cc-thinking-skills ——
      只裝 `skills/` 底下的技能資料夾，**不要**搬 evals／experiments／scripts。
 5. **speak-human-tw**（繁體中文文字「去 AI 味」校對，會寫對外文章的人建議裝）：
-   在 GitHub 搜尋 `speak-human-tw`（作者：雷蒙），裝該技能資料夾。
+   https://github.com/Raymondhou0917/speak-human-tw ——裝該技能資料夾。
 
 ### 3e. 安裝入門包自帶技能
 
@@ -254,19 +270,24 @@ clone https://github.com/Dhahran123/claude-code-starter-tw ，
 
 ## 階段 4：重啟、驗收、第一課
 
-1. 重啟讓新裝的 MCP 工具與技能載入：
+1. 重啟讓新裝的 MCP 工具與技能載入。**重啟前先講好回來的路**：
+   「重開後從左側清單點回**這個對話**，跟我說『繼續設定』；
+   真的找不到舊對話，就重貼 README 那段咒語並說『從階段 4 繼續』。」
    - **桌面版**：請使用者完全結束 app（`Cmd + Q`）再重新打開，回到 Code 分頁、
      選同一個工作資料夾。
    - **終端機版**：輸入 `/exit` 離開，再輸入 `claude` 重新啟動。
    回來後請他輸入 `/mcp`，確認 playwright、firecrawl、pubmed、openalex 都顯示已連線。
-2. 帶他做三個小測試（一次一個，親眼看到成果最重要）：
-   - **文獻**：「幫我查 2024 年後比較 clear aligner 與 fixed appliance 治療效率的文獻，挑三篇給我摘要」
-   - **網頁**：「幫我讀這個網頁的重點」（請他隨便貼一個新聞或文章連結）
-   - **文書**：「幫我做一頁 PowerPoint，主題隨意，存到桌面」
+2. 帶他做小測試，**每項指明用哪個工具，做完回報實際用了哪個**（一次一個）：
+   - **文獻（測 pubmed）**：「用 pubmed 工具查 2024 年後比較 clear aligner 與
+     fixed appliance 治療效率的文獻，挑三篇給我摘要」
+   - **驗貨（測 openalex）**：「用 openalex 確認剛剛那三篇都沒有被撤稿」
+   - **網頁（測 firecrawl）**：「用 firecrawl 讀這個網頁的重點」（請他貼一個新聞連結）
+   - **文書（測簡報技能）**：「幫我做一頁 PowerPoint，主題隨意，存到工作資料夾」
+   哪一項失敗就記下來，不要籠統說「都好了」。
 3. 教他日常操作：`/help`（指令總覽）、`/compact`（對話瘦身）、`/clear`（開新話題）、
    `Esc`（喊停）、`/doctor`（自我診斷）；回到之前的對話——桌面版點左側清單，
    終端機版輸入 `/resume`。
-4. 輸出兩份清單：**已完成的設定**與**跳過的項目**（含原因）。
+4. 輸出驗收清單：四個 MCP 與每支技能**逐項**標「成功／失敗／跳過（含原因）」。
 5. 問他要不要接著做選配階段 5（Gmail／行事曆）與階段 6（Codex 第二位 AI）——
    不做也沒關係，說明以後隨時說一聲就能回來裝。
 
@@ -287,9 +308,13 @@ clone https://github.com/Dhahran123/claude-code-starter-tw ，
 找不到 Connectors 選單時：確認他用的是桌面版的本機 session（雲端 session 沒有這功能）；
 終端機版也沒有這個圖形選單——請改開桌面版操作這一段。
 
-提醒（白話講給他聽）：接上後，行事曆與信件內容會像貼進對話一樣經過 Claude，
-跟平常用 claude.ai 同一個等級。給醫療人員：完整病歷本來就不該用一般信箱往來；
-若信箱裡有，別叫 Claude 去讀那些信。
+**接之前先問一題（醫療人員必問）**：「這個 Google 帳號的信箱或行事曆，
+平常會不會出現病患姓名、約診名單、轉診內容？」
+- **會** → 建議不要接這個帳號（或改接一個不含臨床資料的個人帳號）。
+- **不會** → 再往下做。
+
+並白話講清楚：接上後 Claude 讀到的信件與行程內容都會傳到它的雲端處理，
+跟貼進對話同一個等級——所以上面那條病患紅線，信箱和行事曆也一體適用。
 
 ⚠️ 給你（Claude）的界線：**不要**帶使用者走「自建 Google Cloud OAuth 憑證」的
 社群 MCP 路線——那條對新手太難、坑很多。官方 Connectors 若不可用，回報並跳過。
@@ -318,8 +343,9 @@ clone https://github.com/Dhahran123/claude-code-starter-tw ，
 教他一句口訣：「做完重要的東西，叫另一位看一遍。」
 
 ⚠️ 紅線（講給使用者聽，並在他的 `~/.claude/CLAUDE.md` 硬規則區補一行）：
-任何「把整段對話或檔案交給 Codex」的功能（transfer／delegate 類指令）
-＝內容送到 OpenAI 雲端——**含病患資料的對話絕對不可以用**。
+**任何 `/codex:` 開頭的指令**，都會把相關內容（對話、檔案、程式碼）送到
+OpenAI 的雲端——不是只有 transfer／delegate 才算。
+**含病患資料的工作一律不使用 `/codex:` 指令。**
 
 ---
 

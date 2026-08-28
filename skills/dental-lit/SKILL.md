@@ -46,7 +46,7 @@ description: 牙科文獻五步管線：PICO 定形→雙軌搜（語意＋PubMe
 
 ### Step 2｜三層驗貨
 - **撤稿關**：OpenAlex 批次——`openalex_search_entities`，`entity_type: works`、`filters: {"doi": "A|B|C|…"}`（pipe 串接一發驗完）、`select: ["doi","is_retracted"]`。備援：Crossref REST `works/{DOI}` 看 `updated-by`（Retraction Watch 已併入）。
-- **來源關**：期刊是否 MEDLINE／DOAJ 收錄（OpenAlex 有旗標）；predatory 疑慮用收錄狀態判斷，不靠黑名單。
+- **來源關**：DOAJ 收錄查 OpenAlex（`is_in_doaj`）；MEDLINE 收錄 OpenAlex **沒有**旗標——查 NLM Catalog／PubMed 的期刊資訊，查不到就標「收錄狀態未驗證」。predatory 疑慮用收錄狀態判斷，不靠黑名單。
 - **定位關**：鐵則 3、4——type 與研究定位逐筆對齊題目。
 - 立場抽驗（選配，深挖時做）：`pubmed_find_related` `cited_by` 抽讀引用文獻摘要，看後續文獻支持或反駁；寧可少報、報了要準。
 
