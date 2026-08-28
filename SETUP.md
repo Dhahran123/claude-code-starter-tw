@@ -11,6 +11,11 @@
 完全沒接觸過 AI 工具與程式，母語是繁體中文，用的是 Mac。
 你的任務：照本文件的階段順序，帶他完成 Claude Code 的個人化設定。
 
+**環境判斷（開工前先做）**：使用者可能用**桌面版 app**（預設路線）或**終端機版 CLI**，
+兩者共用設定（`~/.claude/`、`~/.claude.json`）。先跑 `command -v claude` 判斷：
+- 有 `claude` 指令 → 各階段照指令版做法走。
+- 沒有（桌面版通常不附 CLI）→ **這不是錯誤**，照各階段標「桌面版做法」的替代路線走。
+
 ### 執行守則（全程遵守）
 
 1. 全程**繁體中文**，白話＋比喻，不用工程術語；專有名詞第一次出現時用一句話解釋。
@@ -32,8 +37,8 @@
 1. 跑 `node --version`。
    - 沒有的話：待會要接的外部工具需要它（Node.js 是那些工具的運行引擎）。
      帶使用者到 https://nodejs.org 下載 **LTS 版**的 macOS 安裝檔（.pkg），
-     像裝一般軟體一樣裝完 → 重開終端機 → 重新進 Claude Code 回來繼續。
-     （不要教他用 Homebrew，對新手太複雜。）
+     像裝一般軟體一樣裝完 → 完全重啟 Claude Code（桌面版 `Cmd + Q` 再重開；
+     終端機版重開終端機）→ 回來繼續。（不要教他用 Homebrew，對新手太複雜。）
 2. 跑 `git --version`。
    - 第一次跑 macOS 可能跳出「安裝命令列開發者工具」視窗——請使用者按「安裝」等它完成。
 3. 問使用者要一個 **email**：後面接學術資料庫（PubMed／OpenAlex）時當禮貌性識別用，
@@ -86,6 +91,9 @@
 接了文獻資料庫它才能幫你查 PubMed。
 裝完要**重啟 Claude Code 才生效**，所以這階段先全部裝完，重啟留到階段 4。
 
+以下指令需要 `claude` CLI；**若環境判斷是「桌面版、無 CLI」，跳到本階段最後的
+〈桌面版做法〉**，效果完全一樣。
+
 依序執行，每裝一個就跑 `claude mcp list` 確認清單裡有它：
 
 **1. Playwright**（讓 Claude 操作瀏覽器：查資料、抓需要登入或動態載入的網頁）
@@ -120,6 +128,43 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 
 疑難排解：若某個工具加完後顯示連不上，先跑一次 `npx -y 該套件名 --help`
 把套件下載進快取（第一次下載較久、可能逾時），再重試。
+
+### 桌面版做法（沒有 `claude` CLI 時用）
+
+直接編輯使用者家目錄的 `~/.claude.json`（MCP 設定就存在這裡，桌面版與 CLI 共用）：
+
+1. **先備份**：`cp ~/.claude.json ~/.claude.json.bak`（檔案不存在就跳過備份、之後建新檔）。
+2. 讀取現有內容，在頂層的 `mcpServers` 物件裡**合併**以下四個項目
+   （保留檔案裡原有的其他內容，`使用者email` 換成階段 0 拿到的）：
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "firecrawl": {
+      "type": "http",
+      "url": "https://mcp.firecrawl.dev/mcp"
+    },
+    "pubmed": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/pubmed-mcp-server"],
+      "env": { "MCP_TRANSPORT_TYPE": "stdio", "MCP_LOG_LEVEL": "warn", "UNPAYWALL_EMAIL": "使用者email" }
+    },
+    "openalex": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/openalex-mcp-server"],
+      "env": { "MCP_TRANSPORT_TYPE": "stdio", "MCP_LOG_LEVEL": "warn", "OPENALEX_MAILTO": "使用者email" }
+    }
+  }
+}
+```
+
+3. 存檔後驗證 JSON 格式正確（壞掉的 JSON 會讓整個 app 讀不到設定——
+   驗證失敗就還原備份重來）。
+4. 這條路線沒辦法當場跑 `claude mcp list`——驗證留到階段 4 重啟後用 `/mcp` 看。
 
 ---
 
@@ -209,15 +254,18 @@ clone https://github.com/Dhahran123/claude-code-starter-tw ，
 
 ## 階段 4：重啟、驗收、第一課
 
-1. 請使用者輸入 `/exit` 離開，再輸入 `claude` 重新啟動
-   （新裝的 MCP 工具與技能都要重啟才載入）。
+1. 重啟讓新裝的 MCP 工具與技能載入：
+   - **桌面版**：請使用者完全結束 app（`Cmd + Q`）再重新打開，回到 Code 分頁、
+     選同一個工作資料夾。
+   - **終端機版**：輸入 `/exit` 離開，再輸入 `claude` 重新啟動。
    回來後請他輸入 `/mcp`，確認 playwright、firecrawl、pubmed、openalex 都顯示已連線。
 2. 帶他做三個小測試（一次一個，親眼看到成果最重要）：
    - **文獻**：「幫我查 2024 年後比較 clear aligner 與 fixed appliance 治療效率的文獻，挑三篇給我摘要」
    - **網頁**：「幫我讀這個網頁的重點」（請他隨便貼一個新聞或文章連結）
    - **文書**：「幫我做一頁 PowerPoint，主題隨意，存到桌面」
-3. 教他六個日常指令：`/help`（指令總覽）、`/resume`（回上次對話）、
-   `/compact`（對話瘦身）、`/clear`（開新話題）、`Esc`（喊停）、`/doctor`（自我診斷）。
+3. 教他日常操作：`/help`（指令總覽）、`/compact`（對話瘦身）、`/clear`（開新話題）、
+   `Esc`（喊停）、`/doctor`（自我診斷）；回到之前的對話——桌面版點左側清單，
+   終端機版輸入 `/resume`。
 4. 最後輸出兩份清單：**已完成的設定**與**跳過的項目**（含原因），並提醒他：
    之後想要任何新能力，直接用白話說「我想要能◯◯」，Claude 會提議做法。
 
