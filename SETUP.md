@@ -106,6 +106,71 @@
 
 ---
 
+## 階段 1b：安全防護（防呆鎖＋檔案存檔點）
+
+白話：幫助理裝兩道保險——**危險指令黑名單**（最具破壞性的指令直接擋下、連問都不問）
+與**檔案存檔點**（Claude 改壞檔案時有版本可以救回來）。
+
+做法：編輯使用者家目錄的 `~/.claude/settings.json`
+（桌面版與終端機版共用；⚠️ 這與階段 2 的 `~/.claude.json` 是**兩個不同檔案**）：
+
+1. **先備份**：檔案已存在就先複製一份成 `settings.json.bak`；不存在就直接建新檔。
+2. 讀取現有內容，**合併**以下設定（保留原有其他內容；`deny` 清單已有的項目不重複加。
+   兩套寫法 Mac／Windows 都放沒關係——用不到的那套永遠不會被觸發）：
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -r *)",
+      "Bash(rm -R *)",
+      "Bash(sudo *)",
+      "Bash(dd *)",
+      "Bash(mkfs*)",
+      "Bash(git reset --hard*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git clean -f*)",
+      "Bash(git branch -D*)",
+      "Bash(shutdown*)",
+      "Bash(reboot*)",
+      "PowerShell(Remove-Item -Recurse -Force*)",
+      "PowerShell(Remove-Item -Force -Recurse*)",
+      "PowerShell(rm -rf*)",
+      "PowerShell(rm -fr*)",
+      "PowerShell(rm -r -Force*)",
+      "PowerShell(Format-Volume*)",
+      "PowerShell(Clear-Disk*)",
+      "PowerShell(Remove-Partition*)",
+      "PowerShell(diskpart*)",
+      "PowerShell(Stop-Computer*)",
+      "PowerShell(Restart-Computer*)",
+      "PowerShell(Set-ExecutionPolicy*)",
+      "PowerShell(git reset --hard*)",
+      "PowerShell(git push --force*)",
+      "PowerShell(git push -f*)",
+      "PowerShell(git clean -f*)",
+      "PowerShell(git branch -D*)"
+    ]
+  },
+  "fileCheckpointingEnabled": true
+}
+```
+
+3. 存檔後驗證 JSON 格式正確（壞掉的 JSON 會讓整個 app 讀不到設定——
+   驗證失敗就還原備份重來）。
+4. 用白話跟使用者講清楚兩件事：
+   - 黑名單擋的都是「幾乎不可能是你想要的」動作：整批強制刪除、格式化硬碟、
+     強制改寫版本紀錄、關機重開機。Claude 想跑這些會直接被拒絕。
+   - 這**不是**萬能保險——日常的權限視窗還是要看；刪除、覆蓋類的動作多看一眼再允許。
+
+⚠️ 給你（Claude）的界線：只加上面這兩項設定，**不要**動 `permissions` 的其他欄位，
+尤其**絕不**設定任何「跳過權限確認」的模式——新手需要那道權限視窗。
+
+---
+
 ## 階段 2：接上核心外部工具（MCP）
 
 白話：MCP 像「幫助理接上各種工具的插座」。核心兩個人人都裝；
