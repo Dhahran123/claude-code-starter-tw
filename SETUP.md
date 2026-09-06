@@ -259,6 +259,11 @@ Windows 例 `%TEMP%\skill-install\`；⚠️ 不要 clone 進使用者的工作�
 失敗就在 GitHub 搜 `find-skills` 技能照通用裝法裝；再不行標跳過（非硬前置）。
 裝完順便講一次習慣：**用它裝任何陌生技能前，先讀該技能的 SKILL.md 確認沒有奇怪指示**。
 
+**grilling＋grill-me**（魔鬼代言人——重要決定前讓 Claude 逼問你的計畫，把漏洞先問出來）：
+照通用裝法 clone https://github.com/mattpocock/skills ，
+從 `skills/productivity/` 底下複製 `grilling` 與 `grill-me` 兩個資料夾（成對，都要裝）。
+跟使用者說一句用法：「做重要決定前，說『grill me』或『壓力測試這個計畫』。」
+
 ### 3b. 模組選單（照訪談結果推薦，使用者點頭才裝）
 
 把符合他工作的模組用一句白話介紹、問要不要裝：
@@ -322,10 +327,10 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 3. **scheduler**（定時自動任務）：https://github.com/jshchnz/claude-code-scheduler ——
    只裝 `skills/scheduler/` 資料夾。⚠️ 定時執行需要**終端機版 CLI**——只用桌面版的人
    先別裝。⚠️ 排程任務**絕不**在碰得到敏感資料的資料夾用「跳過權限確認」的設定。
-4. **思考決策包**：`grilling`＋`grill-me`（壓力測試你的計畫）：
-   https://github.com/mattpocock/skills （在 `skills/productivity/` 底下）——只裝這兩支；
-   結構化思考 8 支：https://github.com/tjboudreaux/cc-thinking-skills ——
+4. **結構化思考 8 支**（pre-mortem 預想失敗、第一性原理、機會成本……）：
+   https://github.com/tjboudreaux/cc-thinking-skills ——
    只裝 `skills/` 底下的技能資料夾，**不要**搬 evals／experiments／scripts。
+   （grilling 已在基本技能裝過，這裡是更進階的思考模板。）
 5. **交接與方法論三支**（`handoff` 把做到一半的工作交接給下一個對話／`teach` 用蘇格拉底式
    教你懂一個概念／`writing-great-skills` 自己寫技能的方法論）：
    https://github.com/mattpocock/skills ——同上 repo，各技能資料夾照通用裝法。
