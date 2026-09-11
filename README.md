@@ -61,18 +61,25 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 
 ## Codex 路線（取代上面第 1、2 步）
 
+**桌面版（推薦——跟 Claude 路線一樣，不用打任何指令）：**
+
+1. 到 [chatgpt.com/download](https://chatgpt.com/download) 下載 ChatGPT 桌面 app（Mac／Windows），
+   像裝一般軟體一樣裝好，用你的 ChatGPT 帳號登入。
+2. 點左側的 **Codex** 分頁——新版 ChatGPT app 內建，不用另外裝。
+3. 先在「文件」裡**建一個新資料夾，取名 `claude-work`**，回到 app 選「**開啟資料夾**」選它。
+   以後 Codex 都在這個資料夾裡幫你做事。
+
+**終端機版（替代路線，之後想玩自動化排程的人才需要）：**
+
 1. 打開終端機（Mac：Cmd＋空白鍵搜尋「終端機」；Windows：開始選單搜尋「PowerShell」），貼一行安裝：
    - **Mac**：`curl -fsSL https://chatgpt.com/codex/install.sh | sh`
-   - **Windows**：先到 [nodejs.org](https://nodejs.org) 裝 LTS 版（一路下一步），
-     再在 PowerShell 貼 `npm install -g @openai/codex`
-2. **關掉終端機重新打開**，輸入 `codex --version`——有版本號就裝好了。
-   （Windows 若出現「執行原則」之類的紅字，改打 `codex.cmd` 就好。）
-3. 在「文件」裡建一個 `claude-work` 資料夾，然後在終端機進到那個資料夾：
-   - **Mac**：打 `cd `（cd 加一個空格），把資料夾從 Finder **拖進終端機視窗**，按 Enter
-   - **Windows**：打 `cd "$HOME\Documents\claude-work"`，按 Enter
-4. 輸入 `codex` → 選 **Sign in with ChatGPT** → 瀏覽器登入完成回到終端機。
-5. 想要圖形介面：在終端機輸入 `codex app`（會開 ChatGPT 桌面 app，Windows 會提示要開啟的路徑），
-   開啟後選同一個 `claude-work` 資料夾。
+   - **Windows**：先到 [nodejs.org](https://nodejs.org) 裝 LTS 版，再貼 `npm install -g @openai/codex`
+2. **關掉終端機重新打開**，輸入 `codex --version`——有版本號就裝好了
+   （Windows 若出現「執行原則」紅字，改打 `codex.cmd`）。
+3. 進到 `claude-work` 資料夾（Mac：打 `cd ` 後把資料夾從 Finder **拖進終端機視窗**；
+   Windows：`cd "$HOME\Documents\claude-work"`），輸入 `codex` → **Sign in with ChatGPT**。
+
+桌面版與終端機版**共用同一套設定**，兩邊可以並用。
 
 ## 第 3 步：把剩下的設定交給 AI（魔法咒語）
 

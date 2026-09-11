@@ -14,19 +14,19 @@ SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左
 
 | SETUP.md 裡的 Claude 做法 | Codex 的對應做法 |
 |---|---|
-| 環境判斷 `command -v claude` | Mac 用 `command -v codex`；Windows PowerShell 用 `Get-Command codex`。本路線一定裝了 CLI，沒有「桌面版無 CLI」這個分支 |
-| 「桌面版做法」（編 `~/.claude.json`） | 不需要，一律走指令版 |
+| 環境判斷 `command -v claude` | Mac 用 `command -v codex`；Windows PowerShell 用 `Get-Command codex`。**桌面版（ChatGPT app 的 Codex 分頁）使用者可能沒有 CLI**——找不到不是錯誤，照下一列的桌面版做法走 |
+| 「桌面版做法」（編 `~/.claude.json`） | Codex 的桌面版做法＝直接編 **`~/.codex/config.toml`**（app 與 CLI 共用這份設定）：先備份成 `config.toml.bak`，再把需要的 `[mcp_servers.名稱]` 區塊**合併**進去（已有同名區塊就更新，不重複加；格式見下面各列），存檔後完全結束 ChatGPT app 再開。驗證留到重啟後在對話裡輸入 `/mcp` |
 | 員工手冊 `~/.claude/CLAUDE.md` | **`~/.codex/AGENTS.md`**（內容格式一樣，照 SETUP 階段 1 的模板寫；若已有 `AGENTS.override.md` 它會優先生效，先看有沒有） |
 | **階段 1b 安全防護**（Claude 的 `settings.json` 黑名單＋檔案存檔點） | **不能照搬那份 JSON**——Codex 不讀它。Codex 的權限靠 `~/.codex/config.toml` 的 `approval_policy` 與 `sandbox_mode`：**保持預設的「要問就問」**，不要設成免確認。檔案存檔點 Codex 沒有對應功能：改動重要檔案前請它先備份一份（`.bak`），並讓使用者知道「這邊沒有一鍵還原」 |
-| `claude mcp add --scope user 名稱 -- npx -y 套件` | `codex mcp add 名稱 -- npx -y 套件` |
-| `claude mcp add … -e KEY=VAL …` | `codex mcp add 名稱 --env KEY=VAL -- npx -y 套件`（多個變數就重複 `--env`） |
+| `claude mcp add --scope user 名稱 -- npx -y 套件` | 指令版 `codex mcp add 名稱 -- npx -y 套件`；設定檔版：<br>`[mcp_servers.playwright]`<br>`command = "npx"`<br>`args = ["-y", "@playwright/mcp@latest"]` |
+| `claude mcp add … -e KEY=VAL …` | 指令版 `codex mcp add 名稱 --env KEY=VAL -- npx -y 套件`（多個變數就重複 `--env`）；設定檔版：<br>`[mcp_servers.pubmed]`<br>`command = "npx"`<br>`args = ["-y", "@cyanheads/pubmed-mcp-server"]`<br>`[mcp_servers.pubmed.env]`<br>`MCP_TRANSPORT_TYPE = "stdio"`<br>`UNPAYWALL_EMAIL = "使用者email"` |
 | HTTP 型 MCP（Firecrawl）`--transport http` | 先試 `codex mcp add firecrawl --url https://mcp.firecrawl.dev/v2/mcp`；版本不支援就寫進 `~/.codex/config.toml`（已有同名區塊就更新它，不要重複加）：<br>`[mcp_servers.firecrawl]`<br>`url = "https://mcp.firecrawl.dev/v2/mcp"` |
 | `claude mcp list`／`/mcp` | `codex mcp list`；對話裡輸入 `/mcp` |
 | Windows 上 npx 型 MCP 連不上要用 `cmd /c npx` | 一樣，但**程式與參數要分開**：指令版 `codex mcp add playwright -- cmd /c npx -y @playwright/mcp@latest`；設定檔版 `command = "cmd"`、`args = ["/c", "npx", "-y", "@playwright/mcp@latest"]`。只在直接用 `npx` 連不上時才這樣改 |
 | 技能資料夾 `~/.claude/skills/` | **`~/.agents/skills/`**（官方位置）。裝完技能清單沒出現：先看 `codex --version` 與技能載入有無錯誤，確定是舊版才改用 `~/.codex/skills/`——**不要兩邊都放**，同名技能會重複出現 |
 | 呼叫技能 `/技能名` | `$技能名`（Codex 也會依 description 自動觸發） |
 | 技能內容本身含 Claude 專屬指令（例：`scheduler` 要靠 `claude` CLI 排程、找 `~/.claude/` 路徑的技能） | **相容性檢查**：裝前讀該 SKILL.md，含 Claude 專屬指令的技能在 Codex 不裝，或改寫並驗收後才啟用 |
-| 重啟 Claude Code | 結束 codex 再重新啟動；**回到原本的設定對話用 `codex resume`**（單純打 `codex` 是開新對話） |
+| 重啟 Claude Code | 桌面版：完全結束 ChatGPT app 再開，回 Codex 分頁選同一個資料夾、左側清單點回原對話。終端機版：結束 codex 再啟動，**回原本的設定對話用 `codex resume`**（單純打 `codex` 是開新對話） |
 | `/doctor` 自我診斷 | 終端機跑 `codex doctor` |
 | `/clear`、`/resume`、`/help`、`/compact` | Codex 也有這些指令，照用 |
 | 階段 5 Gmail／行事曆 Connectors | Claude 那組選單步驟不適用 Codex。Codex 有自己的 Plugins 介面可接 Gmail 等服務——**本包暫不設定**，想接再另外處理 |
@@ -41,16 +41,17 @@ SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左
 
 1. 帳號：用 ChatGPT 帳號登入。**免費／Go 方案也能用 Codex，但額度很少；本包建議 Plus 以上**。
    也可用另外計費的 API key，但新手不建議。
-2. 裝 CLI（擇一）：
+2. **最簡單的做法＝桌面版**：到 https://chatgpt.com/download 裝 ChatGPT 桌面 app、登入、
+   點 **Codex** 分頁、開啟你的工作資料夾——做完直接跳到第 6 步。
+   想要終端機版才做 3～5 步（桌面版與終端機版共用設定，兩邊可並用）。
+3. 裝 CLI（擇一）：
    - **Mac**：終端機貼 `curl -fsSL https://chatgpt.com/codex/install.sh | sh`（或 `brew install --cask codex`）
    - **Windows**：先確認有 Node.js（`node --version`，沒有就到 nodejs.org 裝 LTS），
      再在 PowerShell 貼 `npm install -g @openai/codex`
-3. **關掉終端機重開**，輸入 `codex --version` 有版本號才算裝好。
+4. **關掉終端機重開**，輸入 `codex --version` 有版本號才算裝好。
    Windows 若出現「執行原則」錯誤，改打 `codex.cmd`。
-4. 在工作資料夾啟動：終端機 `cd` 到資料夾（Mac 可把資料夾拖進終端機視窗取得路徑），
+5. 在工作資料夾啟動：終端機 `cd` 到資料夾（Mac 可把資料夾拖進終端機視窗取得路徑），
    輸入 `codex` → 選 **Sign in with ChatGPT** → 瀏覽器登入。
-5. 想要圖形介面：在終端機輸入 `codex app`（會開 ChatGPT 桌面 app，Windows 會提示路徑），
-   開啟後選同一個工作資料夾。
 6. 接著做第三節「共同記憶」。
 
 ### 已有 Codex → 加 Claude Code
