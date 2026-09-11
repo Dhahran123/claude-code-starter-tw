@@ -22,8 +22,10 @@ Claude 專屬的指令與路徑（`claude mcp add`、`~/.claude/…`、桌面版
 1. **確認是本機 session**：跑 `uname`——
    - 回 `Darwin`＝使用者的 Mac，繼續。
    - 回 `MINGW`／`MSYS` 開頭（或指令不存在但 PowerShell 可用）＝Windows 本機，繼續。
-   - 回 `Linux`＝這是雲端 session，**停下**：請使用者關掉這個對話，
-     重開一個 **Local（本機）** session 再重貼咒語（設定裝在雲端環境就白做了）。
+   - 回 `Linux`：先看 `/proc/version` 有沒有 `microsoft` 字樣——
+     **有＝Windows 的 WSL**，本包不走 WSL，請使用者改用原生 Windows（PowerShell）重來；
+     **沒有＝雲端 session**，**停下**：請使用者關掉這個對話，重開一個 **Local（本機）**
+     session 再重貼咒語（設定裝在雲端環境就白做了）。
 2. **判斷有沒有 CLI**：使用者可能用**桌面版 app**（預設路線）或**終端機版 CLI**，
    兩者共用設定（`~/.claude/`、`~/.claude.json`）。跑 `command -v claude`：
    - 有 `claude` 指令 → 各階段照指令版做法走。
@@ -209,7 +211,10 @@ claude mcp add --scope user --transport http firecrawl https://mcp.firecrawl.dev
 
 疑難排解：若加完後顯示連不上——先跑一次 `npx -y 該套件名 --help` 把套件下載進快取
 （第一次下載較久、可能逾時）再重試；**Windows** 上 npx 型工具若一直連不上，
-把設定裡的 command 從 `npx` 改成 `cmd /c npx`（舊版本的已知坑）。
+用 `cmd` 包一層——**程式與參數要分開寫**：指令版
+`claude mcp add --scope user playwright -- cmd /c npx -y @playwright/mcp@latest`；
+設定檔版 `"command": "cmd"`、`"args": ["/c", "npx", "-y", "@playwright/mcp@latest"]`
+（不是把 command 整串寫成 `cmd /c npx`）。只在直接用 `npx` 連不上時才這樣改。
 
 ### 桌面版做法（沒有 `claude` CLI 時用）
 
@@ -360,12 +365,15 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 2. 帶他做小測試，**每項指明用哪個工具，做完回報實際用了哪個**（一次一個，
    只測有裝的模組）：
    - **網頁（測 firecrawl，人人）**：「用 firecrawl 讀這個網頁的重點」（請他貼一個連結）
+   - **瀏覽器（測 playwright，人人）**：「用 playwright 打開 example.com 截一張圖給我看」
    - **文書（測簡報技能，人人）**：「幫我做一頁 PowerPoint，主題隨意，存到工作資料夾」
+     （其他三支文書技能標「已安裝、未實測」，不要說全部都好了）
    - **文獻（醫療模組）**：「用 pubmed 工具查一題他專科的臨床問題，挑三篇給摘要」，
      接著「用 openalex 確認那三篇沒有被撤稿」
    哪一項失敗就記下來，不要籠統說「都好了」。
-3. **交付使用手冊**：把本入門包的 `GUIDE.md` 下載到使用者的工作資料夾
-   （ https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/GUIDE.md ），
+3. **交付使用手冊**：把本入門包的 `GUIDE.md` 與 `DUAL.md` 都下載到使用者的工作資料夾
+   （ https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/GUIDE.md 、
+   https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/DUAL.md ），
    帶他快速導覽一遍——**只講他有裝的部分**：功能地圖與例句、
    「讓它越用越懂你」那節（教他調教員工手冊）、兩個好習慣。
    收尾告訴他：「以後忘記什麼，跟我說『**打開使用手冊**』就好。」
@@ -384,6 +392,14 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 先問使用者要不要，用例子說明價值：接上後可以「幫我看明天有什麼行程」
 「找◯◯寄來的那封信」「幫我在下週二下午加一個會議」。要才做。
 
+**確定要接之後、動手之前，先問這一題（處理敏感資料的行業必問）**：
+「這個 Google 帳號的信箱或行事曆，平常會不會出現病患／客戶的可識別資料？」
+- **會** → 建議不要接這個帳號（或改接一個不含敏感資料的個人帳號）。
+- **不會** → 才往下做。
+
+並白話講清楚：接上後 Claude 讀到的信件與行程內容都會傳到它的雲端處理，
+跟貼進對話同一個等級——若他的設定檔有「資料紅線」，信箱和行事曆也一體適用。
+
 這一段是**使用者自己動手點選單**（官方圖形化授權，不用打任何指令），你負責口頭導引：
 
 1. 請他點輸入框旁的「**+**」按鈕 → 選 **Connectors**。
@@ -394,14 +410,6 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 找不到 Connectors 選單時：確認他用的是桌面版的本機 session（雲端 session 沒有這功能）；
 終端機版也沒有這個圖形選單——請改開桌面版操作這一段。
 
-**接之前先問一題（處理敏感資料的行業必問）**：「這個 Google 帳號的信箱或行事曆，
-平常會不會出現病患／客戶的可識別資料？」
-- **會** → 建議不要接這個帳號（或改接一個不含敏感資料的個人帳號）。
-- **不會** → 再往下做。
-
-並白話講清楚：接上後 Claude 讀到的信件與行程內容都會傳到它的雲端處理，
-跟貼進對話同一個等級——若他的設定檔有「資料紅線」，信箱和行事曆也一體適用。
-
 ⚠️ 給你（Claude）的界線：**不要**帶使用者走「自建 Google Cloud OAuth 憑證」的
 社群 MCP 路線——那條對新手太難、坑很多。官方 Connectors 若不可用，回報並跳過。
 
@@ -411,8 +419,8 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 
 （本階段給 Claude Code 使用者；Codex 使用者跳過，反向做法見 `DUAL.md` 第四節。）
 
-先問使用者有沒有訂閱 ChatGPT（通常需要付費方案；沒有就跳過本階段，
-說明以後想裝隨時說一聲）。有的話另外告訴他：想更進一步——兩邊共用員工手冊與技能、
+先問使用者有沒有 ChatGPT 帳號（免費／Go 方案也能用 Codex 但額度很少，
+本包建議 Plus 以上；沒有帳號或不想另付就跳過本階段，說明以後想裝隨時說一聲）。有的話另外告訴他：想更進一步——兩邊共用員工手冊與技能、
 互相審稿——設定完成後讀 `DUAL.md` 第二到四節，你（或他的另一個 AI）可以照著做。
 
 白話說明價值：Codex 是 OpenAI 出的同類工具。兩家不同公司的 AI **互相挑錯**——

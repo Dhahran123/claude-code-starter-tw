@@ -18,9 +18,9 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 ## 你需要準備
 
 - 一台 **Mac**（macOS 13 以上）或 **Windows** 電腦（Windows 10 以上）
-- 一個付費帳號，看你選哪個工具（下一節）：
-  **Claude** Pro／Max（[claude.ai](https://claude.ai)，約 US$20／月起）或 **ChatGPT** Plus 以上。
-  免費帳號兩邊都不能用。
+- 一個帳號，看你選哪個工具（下一節）：
+  - **Claude Code**：需要 Claude **Pro 或 Max**（[claude.ai](https://claude.ai)，約 US$20／月起）；免費帳號不能用。
+  - **Codex**：用 ChatGPT 帳號；免費／Go 方案也能用但額度很少，**本包建議 Plus 以上**。
 - 大約 30–60 分鐘
 
 ---
@@ -61,12 +61,18 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 
 ## Codex 路線（取代上面第 1、2 步）
 
-1. 裝 Codex（需要 Node.js 的人用 npm；Mac 也可以用一行安裝腳本）：
-   - **Mac**：打開終端機貼 `curl -fsSL https://chatgpt.com/codex/install.sh | sh`
-   - **Windows**：先到 [nodejs.org](https://nodejs.org) 裝 LTS 版，再在 PowerShell 貼 `npm install -g @openai/codex`
-2. 在「文件」裡建一個 `claude-work` 資料夾，終端機 `cd` 進去，輸入 `codex`，
-   選 **Sign in with ChatGPT** 用瀏覽器登入。
-3. 想要圖形介面：輸入 `codex app`。
+1. 打開終端機（Mac：Cmd＋空白鍵搜尋「終端機」；Windows：開始選單搜尋「PowerShell」），貼一行安裝：
+   - **Mac**：`curl -fsSL https://chatgpt.com/codex/install.sh | sh`
+   - **Windows**：先到 [nodejs.org](https://nodejs.org) 裝 LTS 版（一路下一步），
+     再在 PowerShell 貼 `npm install -g @openai/codex`
+2. **關掉終端機重新打開**，輸入 `codex --version`——有版本號就裝好了。
+   （Windows 若出現「執行原則」之類的紅字，改打 `codex.cmd` 就好。）
+3. 在「文件」裡建一個 `claude-work` 資料夾，然後在終端機進到那個資料夾：
+   - **Mac**：打 `cd `（cd 加一個空格），把資料夾從 Finder **拖進終端機視窗**，按 Enter
+   - **Windows**：打 `cd "$HOME\Documents\claude-work"`，按 Enter
+4. 輸入 `codex` → 選 **Sign in with ChatGPT** → 瀏覽器登入完成回到終端機。
+5. 想要圖形介面：在終端機輸入 `codex app`（會開 ChatGPT 桌面 app，Windows 會提示要開啟的路徑），
+   開啟後選同一個 `claude-work` 資料夾。
 
 ## 第 3 步：把剩下的設定交給 AI（魔法咒語）
 
@@ -92,8 +98,8 @@ SETUP.md 是設定指南，DUAL.md 第一節是「Codex 對照表」——
 請全程用白話的繁體中文，每一步先告訴我會發生什麼事再動手。
 ```
 
-（萬一 Claude 說它讀不到那個網址：用瀏覽器打開上面的網址，
-全選、複製整頁內容，直接貼進輸入框，效果一樣。）
+（萬一 AI 說它讀不到網址：用瀏覽器打開上面的網址，全選、複製整頁內容，
+直接貼進輸入框，效果一樣——用 Codex 的人要把 SETUP.md 和 DUAL.md **兩份都貼**。）
 
 Claude 需要動你的檔案或跑指令時，通常會跳出視窗徵求同意（允許／拒絕的按鈕）。
 看得懂就允許；看不懂就先問它「這一步在做什麼？」——它會解釋，不會不耐煩。
