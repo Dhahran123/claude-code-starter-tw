@@ -419,7 +419,7 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
 
 （本階段給 Claude Code 使用者；Codex 使用者跳過，反向做法見 `DUAL.md` 第四節。）
 
-先問使用者有沒有 ChatGPT 帳號（免費／Go 方案也能用 Codex 但額度很少，
+先問使用者有沒有 ChatGPT 帳號（免費／Go 方案可先試用但可能撞到用量上限，
 本包建議 Plus 以上；沒有帳號或不想另付就跳過本階段，說明以後想裝隨時說一聲）。有的話另外告訴他：想更進一步——兩邊共用員工手冊與技能、
 互相審稿——設定完成後讀 `DUAL.md` 第二到四節，你（或他的另一個 AI）可以照著做。
 

@@ -17,10 +17,13 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 
 ## 你需要準備
 
-- 一台 **Mac**（macOS 13 以上）或 **Windows** 電腦（Windows 10 以上）
+- 一台 **Mac** 或 **Windows** 電腦：
+  - 走 Claude Code：macOS 13 以上／Windows 10（1809 以上）
+  - 走 Codex 桌面版：**macOS 14 以上**（Apple Silicon 或 Intel 都可）／建議 **Windows 11**
 - 一個帳號，看你選哪個工具（下一節）：
   - **Claude Code**：需要 Claude **Pro 或 Max**（[claude.ai](https://claude.ai)，約 US$20／月起）；免費帳號不能用。
-  - **Codex**：用 ChatGPT 帳號；免費／Go 方案也能用但額度很少，**本包建議 Plus 以上**。
+  - **Codex**：用 ChatGPT 帳號。免費／Go 方案可以先試用，但這套設定流程較長、可能撞到用量上限，
+    **本包建議 Plus 以上**；實際剩餘額度以帳號顯示為準。
 - 大約 30–60 分鐘
 
 ---
@@ -63,11 +66,14 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 
 **桌面版（推薦——跟 Claude 路線一樣，不用打任何指令）：**
 
-1. 到 [chatgpt.com/download](https://chatgpt.com/download) 下載 ChatGPT 桌面 app（Mac／Windows），
-   像裝一般軟體一樣裝好，用你的 ChatGPT 帳號登入。
-2. 點左側的 **Codex** 分頁——新版 ChatGPT app 內建，不用另外裝。
-3. 先在「文件」裡**建一個新資料夾，取名 `claude-work`**，回到 app 選「**開啟資料夾**」選它。
-   以後 Codex 都在這個資料夾裡幫你做事。
+1. 到 [chatgpt.com/download](https://chatgpt.com/download) 下載 **新版** ChatGPT 桌面 app
+   （Mac／Windows；下載頁另有「ChatGPT Classic」，**不要選那個**），像裝一般軟體一樣裝好，
+   用你的 ChatGPT 帳號登入。
+2. 在 app 上方的 **ChatGPT 下拉選單選「Codex」**——新版 app 內建，不用另外裝。
+3. 先在「文件」裡**建一個新資料夾，取名 `claude-work`**，回到 Codex 用「**新增專案**」
+   （Windows 也可按 Ctrl＋O）選它，然後開一個新對話。以後 Codex 都在這個資料夾裡幫你做事。
+   第一次可能會問幾個設定：工作環境選 **Local（本機）**；權限選 **Ask for approval**（要問就問）；
+   Windows 若要求設定 sandbox，照畫面完成就好。
 
 **終端機版（替代路線，之後想玩自動化排程的人才需要）：**
 
@@ -103,6 +109,8 @@ SETUP.md 是設定指南，DUAL.md 第一節是「Codex 對照表」——
 請把 SETUP 裡 Claude 專屬的做法換成對照表的做法，一步一步帶我完成所有設定。
 我是完全新手、不是工程師，用的是 Codex，
 請全程用白話的繁體中文，每一步先告訴我會發生什麼事再動手。
+需要連網下載或修改工作資料夾以外的設定時，先跟我說明並帶我完成授權；
+做不到的步驟就停在那裡告訴我，不要跳過。
 ```
 
 （萬一 AI 說它讀不到網址：用瀏覽器打開上面的網址，全選、複製整頁內容，

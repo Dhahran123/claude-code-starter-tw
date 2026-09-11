@@ -51,8 +51,8 @@
 | 喊停 | `Esc` |
 | 覺得怪怪的 | `/doctor`；不行就完全關掉 app 重開 |
 
-用 **Codex** 的人：桌面版回舊對話一樣點左側清單，終端機版用 `codex resume`；
-診斷用終端機 `codex doctor`；其餘指令相同。完整對照在 `DUAL.md` 第一節。
+用 **Codex** 的人：桌面版回舊對話一樣點左側清單、輸入 `/` 看有哪些指令；
+終端機版用 `codex resume`，診斷用 `codex doctor`。完整對照在 `DUAL.md` 第一節。
 
 ---
 

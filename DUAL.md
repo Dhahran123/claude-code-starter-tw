@@ -15,7 +15,7 @@ SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左
 | SETUP.md 裡的 Claude 做法 | Codex 的對應做法 |
 |---|---|
 | 環境判斷 `command -v claude` | Mac 用 `command -v codex`；Windows PowerShell 用 `Get-Command codex`。**桌面版（ChatGPT app 的 Codex 分頁）使用者可能沒有 CLI**——找不到不是錯誤，照下一列的桌面版做法走 |
-| 「桌面版做法」（編 `~/.claude.json`） | Codex 的桌面版做法＝直接編 **`~/.codex/config.toml`**（app 與 CLI 共用這份設定）：先備份成 `config.toml.bak`，再把需要的 `[mcp_servers.名稱]` 區塊**合併**進去（已有同名區塊就更新，不重複加；格式見下面各列），存檔後完全結束 ChatGPT app 再開。驗證留到重啟後在對話裡輸入 `/mcp` |
+| 「桌面版做法」（編 `~/.claude.json`） | Codex 的桌面版做法＝直接編 **`~/.codex/config.toml`**（app 與 CLI 共用這份設定）：先備份成 `config.toml.bak`，再把需要的 `[mcp_servers.名稱]` 區塊**合併**進去（已有同名區塊就更新，不重複加；格式見下面各列）。存檔後到 app 的 **Settings → MCP servers → Restart** 重載；沒更新就完全結束 app 再開。驗證：對話裡輸入 `/mcp`，要看到伺服器**已連線**，不是只看到設定存在 |
 | 員工手冊 `~/.claude/CLAUDE.md` | **`~/.codex/AGENTS.md`**（內容格式一樣，照 SETUP 階段 1 的模板寫；若已有 `AGENTS.override.md` 它會優先生效，先看有沒有） |
 | **階段 1b 安全防護**（Claude 的 `settings.json` 黑名單＋檔案存檔點） | **不能照搬那份 JSON**——Codex 不讀它。Codex 的權限靠 `~/.codex/config.toml` 的 `approval_policy` 與 `sandbox_mode`：**保持預設的「要問就問」**，不要設成免確認。檔案存檔點 Codex 沒有對應功能：改動重要檔案前請它先備份一份（`.bak`），並讓使用者知道「這邊沒有一鍵還原」 |
 | `claude mcp add --scope user 名稱 -- npx -y 套件` | 指令版 `codex mcp add 名稱 -- npx -y 套件`；設定檔版：<br>`[mcp_servers.playwright]`<br>`command = "npx"`<br>`args = ["-y", "@playwright/mcp@latest"]` |
@@ -23,12 +23,12 @@ SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左
 | HTTP 型 MCP（Firecrawl）`--transport http` | 先試 `codex mcp add firecrawl --url https://mcp.firecrawl.dev/v2/mcp`；版本不支援就寫進 `~/.codex/config.toml`（已有同名區塊就更新它，不要重複加）：<br>`[mcp_servers.firecrawl]`<br>`url = "https://mcp.firecrawl.dev/v2/mcp"` |
 | `claude mcp list`／`/mcp` | `codex mcp list`；對話裡輸入 `/mcp` |
 | Windows 上 npx 型 MCP 連不上要用 `cmd /c npx` | 一樣，但**程式與參數要分開**：指令版 `codex mcp add playwright -- cmd /c npx -y @playwright/mcp@latest`；設定檔版 `command = "cmd"`、`args = ["/c", "npx", "-y", "@playwright/mcp@latest"]`。只在直接用 `npx` 連不上時才這樣改 |
-| 技能資料夾 `~/.claude/skills/` | **`~/.agents/skills/`**（官方位置）。裝完技能清單沒出現：先看 `codex --version` 與技能載入有無錯誤，確定是舊版才改用 `~/.codex/skills/`——**不要兩邊都放**，同名技能會重複出現 |
+| 技能資料夾 `~/.claude/skills/` | **`~/.agents/skills/`**（官方位置）。裝完技能清單沒出現：桌面版先看 app 的 Skills 清單並重啟 app；有裝 CLI 的再看 `codex --version` 與技能載入有無錯誤，確定是舊版才改用 `~/.codex/skills/`——**不要兩邊都放**，同名技能會重複出現 |
 | 呼叫技能 `/技能名` | `$技能名`（Codex 也會依 description 自動觸發） |
 | 技能內容本身含 Claude 專屬指令（例：`scheduler` 要靠 `claude` CLI 排程、找 `~/.claude/` 路徑的技能） | **相容性檢查**：裝前讀該 SKILL.md，含 Claude 專屬指令的技能在 Codex 不裝，或改寫並驗收後才啟用 |
-| 重啟 Claude Code | 桌面版：完全結束 ChatGPT app 再開，回 Codex 分頁選同一個資料夾、左側清單點回原對話。終端機版：結束 codex 再啟動，**回原本的設定對話用 `codex resume`**（單純打 `codex` 是開新對話） |
-| `/doctor` 自我診斷 | 終端機跑 `codex doctor` |
-| `/clear`、`/resume`、`/help`、`/compact` | Codex 也有這些指令，照用 |
+| 重啟 Claude Code | 桌面版：只是重載 MCP 的話用 Settings → MCP servers → Restart；需要完全重啟就結束 ChatGPT app 再開，回 Codex 開同一個專案、左側清單點回原對話。終端機版：結束 codex 再啟動，**回原本的設定對話用 `codex resume`**（單純打 `codex` 是開新對話） |
+| `/doctor` 自我診斷 | 終端機版跑 `codex doctor`；只有桌面版、沒裝 CLI 的人跳過，改用重啟 app |
+| `/clear`、`/resume`、`/compact` | 終端機版有 `/clear`、`/resume`、`/compact`；桌面版靠「開新對話」「左側清單回舊對話」和輸入 `/` 看選單（有 `/compact`）。指令是否存在以當下 `/` 選單為準 |
 | 階段 5 Gmail／行事曆 Connectors | Claude 那組選單步驟不適用 Codex。Codex 有自己的 Plugins 介面可接 Gmail 等服務——**本包暫不設定**，想接再另外處理 |
 | 階段 6「第二位 AI：Codex」 | 你就是 Codex，跳過；反向做法看本文件第四節 |
 | find-skills 的 `npx skills add` | 一樣能用（skills.sh 支援 Codex）；裝好後確認它落在上面的技能資料夾 |
@@ -39,11 +39,13 @@ SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左
 
 ### 已有 Claude Code → 加 Codex
 
-1. 帳號：用 ChatGPT 帳號登入。**免費／Go 方案也能用 Codex，但額度很少；本包建議 Plus 以上**。
-   也可用另外計費的 API key，但新手不建議。
-2. **最簡單的做法＝桌面版**：到 https://chatgpt.com/download 裝 ChatGPT 桌面 app、登入、
-   點 **Codex** 分頁、開啟你的工作資料夾——做完直接跳到第 6 步。
-   想要終端機版才做 3～5 步（桌面版與終端機版共用設定，兩邊可並用）。
+1. 帳號：用 ChatGPT 帳號登入。免費／Go 方案可以先試用，但較長的流程可能撞到用量上限，
+   **本包建議 Plus 以上**；剩餘額度以帳號顯示為準。也可用另外計費的 API key，但新手不建議。
+2. **最簡單的做法＝桌面版**（需 macOS 14 以上或建議 Windows 11）：到 https://chatgpt.com/download
+   裝**新版** ChatGPT 桌面 app（不是 Classic）、登入、在上方 ChatGPT 下拉選單選 **Codex**、
+   用「新增專案」（Windows 可 Ctrl＋O）開啟你的工作資料夾，第一次設定選 Local、權限選
+   Ask for approval——做完直接跳到第 6 步。想要終端機版才做 3～5 步
+   （桌面版與終端機版共用設定，兩邊可並用）。
 3. 裝 CLI（擇一）：
    - **Mac**：終端機貼 `curl -fsSL https://chatgpt.com/codex/install.sh | sh`（或 `brew install --cask codex`）
    - **Windows**：先確認有 Node.js（`node --version`，沒有就到 nodejs.org 裝 LTS），
@@ -132,7 +134,8 @@ New-Item -ItemType Junction -Path "$HOME\.agents\skills" -Target "$HOME\.claude\
 ```
 
 驗收：重啟 Codex 開新對話，輸入 `$` 看技能清單有沒有另一邊裝的技能。
-沒有：先看 `codex --version` 與有無載入錯誤，是舊版才把連結另建到 `~/.codex/skills`（擇一，不要兩邊都放）。
+沒有：桌面版先看 app 的 Skills 清單並重啟 app；有裝 CLI 的再看 `codex --version` 與有無載入錯誤，
+確定是舊版才把連結另建到 `~/.codex/skills`（擇一，不要兩邊都放）。
 另外，含 Claude 專屬指令的技能在 Codex 這邊不會正常運作（第一節的相容性檢查）。
 
 ### 3c. 不共用的東西（各裝一次）
