@@ -1,6 +1,6 @@
-# Claude Code 新手入門包
+# AI 助理新手入門包（Claude Code／Codex）
 
-給第一次接觸 AI 工具的你。這份指南帶你裝好 Claude 桌面版 app，
+給第一次接觸 AI 工具的你。這份指南帶你裝好 Claude Code（或 Codex），
 然後——這是最棒的部分——**讓 AI 自己幫你完成剩下的所有設定**。
 你要做的只有：下載、登入、貼一段話。它會先問你是做什麼的，
 再幫你裝適合你的工具。
@@ -18,9 +18,24 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 ## 你需要準備
 
 - 一台 **Mac**（macOS 13 以上）或 **Windows** 電腦（Windows 10 以上）
-- **Claude 付費帳號**：到 [claude.ai](https://claude.ai) 註冊並訂閱 Pro（約 US$20／月）或 Max。
-  免費帳號不能用 Claude Code。
+- 一個付費帳號，看你選哪個工具（下一節）：
+  **Claude** Pro／Max（[claude.ai](https://claude.ai)，約 US$20／月起）或 **ChatGPT** Plus 以上。
+  免費帳號兩邊都不能用。
 - 大約 30–60 分鐘
+
+---
+
+## 第 0 步：選一個工具（Claude Code 或 Codex）
+
+兩個都是「坐在你電腦前的助理」，這份設定包兩個都能跑。怎麼選：
+
+| 你的情況 | 建議 |
+|---|---|
+| 已經在付其中一家的訂閱 | 用那一家，不用多付 |
+| 兩家都沒有、只想先試 | **Claude Code**（本包主線，桌面版對新手最友善） |
+| 兩個都想用 | 先裝一個跑完設定，之後看 [DUAL.md](DUAL.md) 讓兩邊共用記憶、互相審稿 |
+
+選 Claude Code 照下面第 1、2 步；選 Codex 跳到「Codex 路線」。
 
 ---
 
@@ -44,15 +59,36 @@ Claude Code 不一樣，它像**坐在你電腦前的助理**：你用日常語�
 3. 如果畫面讓你選工作環境，選 **Local（本機）**。
    看到 Cloud／雲端之類的選項先不要選——那會把後面的設定裝到別的地方去。
 
+## Codex 路線（取代上面第 1、2 步）
+
+1. 裝 Codex（需要 Node.js 的人用 npm；Mac 也可以用一行安裝腳本）：
+   - **Mac**：打開終端機貼 `curl -fsSL https://chatgpt.com/codex/install.sh | sh`
+   - **Windows**：先到 [nodejs.org](https://nodejs.org) 裝 LTS 版，再在 PowerShell 貼 `npm install -g @openai/codex`
+2. 在「文件」裡建一個 `claude-work` 資料夾，終端機 `cd` 進去，輸入 `codex`，
+   選 **Sign in with ChatGPT** 用瀏覽器登入。
+3. 想要圖形介面：輸入 `codex app`。
+
 ## 第 3 步：把剩下的設定交給 AI（魔法咒語）
 
-把下面這**整段**複製，貼進 Claude 的輸入框，按 Enter：
+把下面這**整段**複製，貼進輸入框，按 Enter（依你用的工具二選一）：
 
+**用 Claude Code 的人：**
 ```
 請先讀取這個網址的設定指南：
 https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/SETUP.md
 讀完之後，照著裡面的指示一步一步帶我完成所有設定。
 我是完全新手、不是工程師，用的是 Claude 桌面版 app，
+請全程用白話的繁體中文，每一步先告訴我會發生什麼事再動手。
+```
+
+**用 Codex 的人：**
+```
+請先讀取這兩個網址：
+https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/SETUP.md
+https://raw.githubusercontent.com/Dhahran123/claude-code-starter-tw/main/DUAL.md
+SETUP.md 是設定指南，DUAL.md 第一節是「Codex 對照表」——
+請把 SETUP 裡 Claude 專屬的做法換成對照表的做法，一步一步帶我完成所有設定。
+我是完全新手、不是工程師，用的是 Codex，
 請全程用白話的繁體中文，每一步先告訴我會發生什麼事再動手。
 ```
 
@@ -126,7 +162,10 @@ Claude 需要動你的檔案或跑指令時，通常會跳出視窗徵求同意�
 - **第二位 AI 互審（Codex）**：如果你也有訂閱 ChatGPT，可以加裝 OpenAI 的
   Codex 當「第二意見」——重要的東西做完，讓兩家公司的 AI 互相挑錯再交出去。
 
-當下跳過了也沒關係，之後隨時跟 Claude 說「我想接行事曆」「我想裝 Codex」就能補裝。
+- **雙棲（兩個 AI 一起用）**：已經有一個、想加另一個？或想讓兩邊共用同一份員工手冊與技能、
+  做完重要的東西互相審稿？看 [DUAL.md](DUAL.md)，AI 也能照著幫你設。
+
+當下跳過了也沒關係，之後隨時跟 AI 說「我想接行事曆」「我想裝另一個 AI」就能補裝。
 
 ---
 
