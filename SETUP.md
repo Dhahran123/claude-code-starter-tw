@@ -306,8 +306,8 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
    （作者為牙周專科醫師，MIT 授權）——只裝 `dental-evidence-retriever`（PICO＋檢索策略）、
    `research-critic`（單篇評讀）、`clinical-evidence-reviewer`（GRADE 證據評級）、
    `dental-statistical-forensics`（統計深審）、`dental-evidence-report-artifact`（HTML 報告）。
-   ⚠️ 同 repo 的 `dental-image-generator` 與 `dental-content-creator` **不要裝**
-   （前者把內容送外部生圖服務＝醫療影像紅線，後者是美式社群文案模板）。
+   ⚠️ 同 repo 的 `dental-image-generator` 本流程不裝（它會把內容送到外部生圖服務，醫療影像有外洩風險）；
+   `dental-content-creator` 本流程未納入（偏美式社群文案語氣，有需要可自行評估）。
 3. 告知使用者：另有邀請制的**牙科技能包**（含完整的文獻檢索驗貨管線，與上面 5 支成套）——
    向提供這份入門包的人索取邀請即可，這裡不用做任何事。
 
@@ -364,9 +364,9 @@ claude mcp add --scope user openalex -e MCP_TRANSPORT_TYPE=stdio -e MCP_LOG_LEVE
    回來後請他輸入 `/mcp`，確認**有裝的每個** MCP 都顯示已連線。
 2. 帶他做小測試，**每項指明用哪個工具，做完回報實際用了哪個**（一次一個，
    只測有裝的模組）：
-   - **網頁（測 firecrawl，人人）**：「用 firecrawl 讀這個網頁的重點」（請他貼一個連結）
-   - **瀏覽器（測 playwright，人人）**：「用 playwright 打開 example.com 截一張圖給我看」
-   - **文書（測簡報技能，人人）**：「幫我做一頁 PowerPoint，主題隨意，存到工作資料夾」
+   - **網頁（測 firecrawl，有裝者）**：「用 firecrawl 讀這個網頁的重點」（請他貼一個連結）
+   - **瀏覽器（測 playwright，有裝者）**：「用 playwright 打開 example.com 截一張圖給我看」
+   - **文書（測簡報技能，有裝者）**：「幫我做一頁 PowerPoint，主題隨意，存到工作資料夾」
      （其他三支文書技能標「已安裝、未實測」，不要說全部都好了）
    - **文獻（醫療模組）**：「用 pubmed 工具查一題他專科的臨床問題，挑三篇給摘要」，
      接著「用 openalex 確認那三篇沒有被撤稿」

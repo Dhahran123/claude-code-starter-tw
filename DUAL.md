@@ -10,7 +10,7 @@
 
 ## 一、Codex 對照表（給執行 SETUP.md 的 Codex 讀）
 
-SETUP.md 是以 Claude Code 為主線寫的。你是 Codex 的話，把下面左欄的東西換成右欄，其餘照做：
+SETUP.md 的指令以 Claude Code 語法示範。你是 Codex 的話，把下面左欄的東西換成右欄，其餘照做：
 
 | SETUP.md 裡的 Claude 做法 | Codex 的對應做法 |
 |---|---|
